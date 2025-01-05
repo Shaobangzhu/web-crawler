@@ -9,9 +9,8 @@ interface Course {
 export class Crawler {
   private _secret = "x3b174jsx";
   private _url = `http://www.dell-lee.com/typescript/demo.html?secret=${this._secret}`;
-  private _rawHtml = "";
 
-  getJsonInfo(html: string) {
+  getJsonInfo(html: string | undefined) {
     try {
       if (!html) {
         throw new Error("HTML content is undefined or null.");
@@ -35,7 +34,7 @@ export class Crawler {
     }
   }
 
-  async getRawHtml() {
+  async getRawHtml(){
     try {
       const result = await superagent.get(this._url);
       if (result.status !== 200) {
@@ -43,15 +42,19 @@ export class Crawler {
           `Failed to fetch URL: ${this._url}, Status: ${result.status}`
         );
       }
-      this._rawHtml = result.text;
-      this.getJsonInfo(this._rawHtml);
+      return result.text;
     } catch (error) {
       console.error("Error fetching HTML:", error);
     }
   }
 
+  async initSpyderProcess() {
+    const html: string | undefined = await this.getRawHtml();
+    this.getJsonInfo(html);
+  }
+
   constructor() {
-    this.getRawHtml();
+    this.initSpyderProcess();
   }
 }
 
