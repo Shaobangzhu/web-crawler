@@ -20,6 +20,7 @@ interface Content {
 export class Crawler {
   private _secret = "x3b174jsx";
   private _url = `http://www.dell-lee.com/typescript/demo.html?secret=${this._secret}`;
+  private _filePath = path.resolve(__dirname, '../data/course.json');
 
   getJsonInfo(html: string) {
     try {
@@ -60,19 +61,19 @@ export class Crawler {
   }
 
   generateJsonContent(courseInfo: ResultObj) {
-    const filePath = path.resolve(__dirname, '../data/course.json');
     let fileContent: Content = {};
-    if (fs.existsSync(filePath)) {
-      fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    if (fs.existsSync(this._filePath)) {
+      fileContent = JSON.parse(fs.readFileSync(this._filePath, 'utf-8'));
     }
     fileContent[courseInfo.time] = courseInfo.data;
-    fs.writeFileSync(filePath, JSON.stringify(fileContent));
+    return fileContent;
   }
 
   async initSpyderProcess() {
     const html = await this.getRawHtml() as string;
     const courseInfo = this.getJsonInfo(html) as ResultObj;
-    this.generateJsonContent(courseInfo);
+    const fileContent = this.generateJsonContent(courseInfo);
+    fs.writeFileSync(this._filePath, JSON.stringify(fileContent));
   }
 
   constructor() {
