@@ -69,11 +69,15 @@ export class Crawler {
     return fileContent;
   }
 
+  writeFile(content: string) {
+    fs.writeFileSync(this._filePath, content);
+  }
+
   async initSpyderProcess() {
     const html = await this.getRawHtml() as string;
     const courseInfo = this.getJsonInfo(html) as ResultObj;
     const fileContent = this.generateJsonContent(courseInfo);
-    fs.writeFileSync(this._filePath, JSON.stringify(fileContent));
+    this.writeFile(JSON.stringify(fileContent));
   }
 
   constructor() {
