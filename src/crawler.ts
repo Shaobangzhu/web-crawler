@@ -6,7 +6,7 @@ interface Course {
     count: number;
 }
 
-class Crawler {
+export class Crawler {
   private _secret = "x3b174jsx";
   private _url = `http://www.dell-lee.com/typescript/demo.html?secret=${this._secret}`;
   private _rawHtml = "";
