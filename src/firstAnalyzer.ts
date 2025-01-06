@@ -18,6 +18,15 @@ interface ResultObj {
 
 export default class FirstAnalyzer implements Analyzer{
 
+  private static instance: FirstAnalyzer;
+
+  static getInstance() {
+    if(!FirstAnalyzer.instance) {
+      FirstAnalyzer.instance = new FirstAnalyzer();
+    }
+    return FirstAnalyzer.instance;
+  }
+
   private getCourseInfo(html: string) {
     try {
       if (!html) {
@@ -56,4 +65,6 @@ export default class FirstAnalyzer implements Analyzer{
     const fileContent = this.generateCourseContent(courseInfo, filePath);
     return JSON.stringify(fileContent);
   }
+
+  private constructor() {}
 }

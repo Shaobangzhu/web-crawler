@@ -16,9 +16,9 @@ export class Crawler {
   /**
    * Fetches the raw HTML content from a given URL
    * @param url 
-   * @returns 
+   * @returns html content in string format
    */
-  async htmlFetcher(url: string){
+  private async htmlFetcher(url: string){
     try {
       const result = await superagent.get(url);
       if (result.status !== 200) {
@@ -34,13 +34,13 @@ export class Crawler {
 
   /**
    * Saves the structured data (extracted by HtmlParser) into a JSON file for future use.
-   * @param content 
+   * @param content json format which is stringified
    */
-  dataSaver(content: string) {
+  private dataSaver(content: string) {
     fs.writeFileSync(this._filePath, content);
   }
 
-  async initSpyderProcess(url: string) {
+  private async initSpyderProcess(url: string) {
     const html = await this.htmlFetcher(url) as string;
     const fileContent = this.analyzer.analyze(html, this._filePath);
     this.dataSaver(fileContent);
@@ -54,5 +54,5 @@ export class Crawler {
 const secret = "x3b174jsx";
 const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
 
-const analyzer = new FirstAnalyzer();
+const analyzer = FirstAnalyzer.getInstance();
 const crawler = new Crawler(url, analyzer);
