@@ -12,11 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Crawler = void 0;
 const superagent_1 = __importDefault(require("superagent"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const firstAnalyzer_1 = __importDefault(require("./firstAnalyzer"));
 class Crawler {
     /**
      * Fetches the raw HTML content from a given URL
@@ -54,12 +52,8 @@ class Crawler {
     constructor(url, analyzer) {
         this.url = url;
         this.analyzer = analyzer;
-        this._filePath = path_1.default.resolve(__dirname, '../data/course.json');
+        this._filePath = path_1.default.resolve(__dirname, 'C:/Projects/learn-js/web-crawler/data/course.json');
         this.initSpyderProcess(url);
     }
 }
-exports.Crawler = Crawler;
-const secret = "x3b174jsx";
-const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
-const analyzer = firstAnalyzer_1.default.getInstance();
-const crawler = new Crawler(url, analyzer);
+exports.default = Crawler;

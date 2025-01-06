@@ -10,8 +10,8 @@ export interface Analyzer {
   analyze: (html: string, filePath: string) => string;
 }
 
-export class Crawler {
-  private _filePath = path.resolve(__dirname, '../data/course.json');
+class Crawler {
+  private _filePath = path.resolve(__dirname, 'C:/Projects/learn-js/web-crawler/data/course.json');
 
   /**
    * Fetches the raw HTML content from a given URL
@@ -51,8 +51,4 @@ export class Crawler {
   }
 }
 
-const secret = "x3b174jsx";
-const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
-
-const analyzer = FirstAnalyzer.getInstance();
-const crawler = new Crawler(url, analyzer);
+export default Crawler;
