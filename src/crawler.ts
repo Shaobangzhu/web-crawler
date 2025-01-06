@@ -1,57 +1,29 @@
-import superagent from "superagent";
-import * as cheerio from "cheerio";
+import superagent from 'superagent';
 import fs from 'fs';
 import path from 'path';
+import FirstAnalyzer from './firstAnalyzer';
 
-interface Course {
-    title: string;
-    count: number;
-}
-
-interface ResultObj {
-  time: number,
-  data: Course[]
-}
-
-interface Content {
-  [propName: number]: Course[];
+/**
+ * Parses the fetched HTML content and extracts meaningful data
+ */
+export interface Analyzer {
+  analyze: (html: string, filePath: string) => string;
 }
 
 export class Crawler {
-  private _secret = "x3b174jsx";
-  private _url = `http://www.dell-lee.com/typescript/demo.html?secret=${this._secret}`;
   private _filePath = path.resolve(__dirname, '../data/course.json');
 
-  getJsonInfo(html: string) {
+  /**
+   * Fetches the raw HTML content from a given URL
+   * @param url 
+   * @returns 
+   */
+  async htmlFetcher(url: string){
     try {
-      if (!html) {
-        throw new Error("HTML content is undefined or null.");
-      }
-      const $ = cheerio.load(html);
-      const courseItems = $(".course-item");
-      const courseInfos: Course[] = [];
-      courseItems.map((index, element) => {
-        const descs = $(element).find('.course-desc');
-        const title = descs.eq(0).text();
-        const count = parseInt(descs.eq(1).text().split('：')[1], 10);
-        courseInfos.push({title, count});
-      });
-      const result = {
-        time: new Date().getTime(),
-        data: courseInfos
-      };
-      return result;
-    } catch (error) {
-        console.error("HTML content issue:", error);
-    }
-  }
-
-  async getRawHtml(){
-    try {
-      const result = await superagent.get(this._url);
+      const result = await superagent.get(url);
       if (result.status !== 200) {
         throw new Error(
-          `Failed to fetch URL: ${this._url}, Status: ${result.status}`
+          `Failed to fetch URL: ${url}, Status: ${result.status}`
         );
       }
       return result.text;
@@ -60,29 +32,27 @@ export class Crawler {
     }
   }
 
-  generateJsonContent(courseInfo: ResultObj) {
-    let fileContent: Content = {};
-    if (fs.existsSync(this._filePath)) {
-      fileContent = JSON.parse(fs.readFileSync(this._filePath, 'utf-8'));
-    }
-    fileContent[courseInfo.time] = courseInfo.data;
-    return fileContent;
-  }
-
-  writeFile(content: string) {
+  /**
+   * Saves the structured data (extracted by HtmlParser) into a JSON file for future use.
+   * @param content 
+   */
+  dataSaver(content: string) {
     fs.writeFileSync(this._filePath, content);
   }
 
-  async initSpyderProcess() {
-    const html = await this.getRawHtml() as string;
-    const courseInfo = this.getJsonInfo(html) as ResultObj;
-    const fileContent = this.generateJsonContent(courseInfo);
-    this.writeFile(JSON.stringify(fileContent));
+  async initSpyderProcess(url: string) {
+    const html = await this.htmlFetcher(url) as string;
+    const fileContent = this.analyzer.analyze(html, this._filePath);
+    this.dataSaver(fileContent);
   }
 
-  constructor() {
-    this.initSpyderProcess();
+  constructor(private url: string, private analyzer:Analyzer) {
+    this.initSpyderProcess(url);
   }
 }
 
-const crawler = new Crawler();
+const secret = "x3b174jsx";
+const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
+
+const analyzer = new FirstAnalyzer();
+const crawler = new Crawler(url, analyzer);
