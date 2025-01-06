@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router_1 = __importDefault(require("./router"));
 const app = (0, express_1.default)();
+const port = 7001;
+app.use(express_1.default.urlencoded({ extended: false }));
 app.use(router_1.default);
-app.listen(7001, () => {
-    console.log('server is running');
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
 });

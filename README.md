@@ -29,7 +29,7 @@ A simple web crawler built with TypeScript, leveraging `superagent` for HTTP req
 1. **Run the Application**:
 
    ```bash
-   npm start
+   npm run dev
 
    ```
 
