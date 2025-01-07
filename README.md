@@ -2,6 +2,16 @@
 
 A simple web crawler built with TypeScript, leveraging `superagent` for HTTP requests and `cheerio` for HTML parsing. This application fetches course information from a demo webpage and parses it into structured JSON data.
 
+## Application Architecture
+
+Below is a diagram representing the architecture of the web crawler app. It includes:
+- A **React** front-end built with **TypeScript**.
+- A **Node.js** and **Express** back-end to handle API requests.
+- A **Web Crawler** component to fetch data from the internet.
+- A **Database** to store the crawled data.
+
+![Architecture Diagram](./assets/arc.webp)
+
 ## Features
 
 - Fetches HTML content from a specified URL.
