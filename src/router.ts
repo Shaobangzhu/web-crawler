@@ -2,6 +2,12 @@ import { Router, Request, Response } from "express";
 import Crawler from "./crawler";
 import FirstAnalyzer from "./firstAnalyzer";
 
+interface RequestWithBody extends Request {
+  body: {
+    [key: string]: string | undefined;
+  }
+}
+
 const router = Router();
 
 router.get("/", (req: Request, res: Response) => {
@@ -17,8 +23,9 @@ router.get("/", (req: Request, res: Response) => {
   `);
 });
 
-router.post("/getData", (req: Request, res: Response) => {
-  if (req.body.password === "extron") {
+router.post("/getData", (req: RequestWithBody, res: Response) => {
+  const { password } = req.body;
+  if (password === "extron") {
     const secret = "x3b174jsx";
     const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
 
