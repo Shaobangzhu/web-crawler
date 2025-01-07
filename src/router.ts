@@ -33,7 +33,7 @@ router.post("/getData", (req: RequestWithBody, res: Response) => {
     new Crawler(url, analyzer);
     res.send("Success");
   } else {
-    res.send(`${req.teacherName}! Password Error!`);
+    res.send("Password Error!");
   }
 });
 
