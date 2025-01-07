@@ -1,18 +1,26 @@
-import { Router, Request, Response } from "express";
-import Crawler from "./crawler";
-import FirstAnalyzer from "./firstAnalyzer";
+import { Router, Request, Response, NextFunction } from "express";
+import Crawler from "./utils/crawler";
+import FirstAnalyzer from "./utils/firstAnalyzer";
 import fs from "fs";
 import path from "path";
 
-interface RequestWithBody extends Request {
-  body: {
-    [key: string]: string | undefined;
-  };
+interface BodyRequest extends Request {
+  body: { [key: string]: string | undefined };
 }
+
+// Middleware to check if the user is logged in or not
+const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
+  const isLogin = req.session ? req.session.login : undefined;
+  if (isLogin) {
+    next();
+  } else {
+    res.send("Please Log In with Your Credential First!");
+  }
+};
 
 const router = Router();
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/", (req: BodyRequest, res: Response) => {
   const isLogin = req.session ? req.session.login : undefined;
   if (isLogin) {
     res.send(`
@@ -38,7 +46,7 @@ router.get("/", (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", (req: RequestWithBody, res: Response) => {
+router.post("/login", (req: BodyRequest, res: Response) => {
   const { password } = req.body;
   const isLogin = req.session ? req.session.login : undefined;
 
@@ -54,42 +62,32 @@ router.post("/login", (req: RequestWithBody, res: Response) => {
   }
 });
 
-router.get("/logout", (req: Request, res: Response) => {
+router.get("/logout", (req: BodyRequest, res: Response) => {
   if (req.session) {
     req.session.login = undefined;
   }
   res.redirect("/");
 });
 
-router.get("/crawl", (req: RequestWithBody, res: Response) => {
-  const isLogin = req.session ? req.session.login : undefined;
-  if (isLogin) {
-    const secret = "x3b174jsx";
-    const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
+router.get("/crawl", checkLogin, (req: BodyRequest, res: Response) => {
+  const secret = "x3b174jsx";
+  const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
 
-    const analyzer = FirstAnalyzer.getInstance();
-    new Crawler(url, analyzer);
-    res.send("Crawling Succeed!");
-  } else {
-    res.send("Please Log In with Your Credential First!");
-  }
+  const analyzer = FirstAnalyzer.getInstance();
+  new Crawler(url, analyzer);
+  res.send("Crawling Succeed!");
 });
 
-router.get("/showData", (req: RequestWithBody, res: Response) => {
-  const isLogin = req.session ? req.session.login : undefined;
-  if(isLogin) {
-    try {
-      const dir = path.resolve(
-        __dirname,
-        "C:/Projects/learn-js/web-crawler/data/course.json"
-      );
-      const result = fs.readFileSync(dir, "utf8");
-      res.json(JSON.parse(result));
-    } catch (error) {
-      res.send("Data has not been crawlled yet");
-    }
-  } else {
-    res.send("Please Log In with Your Credential First!");
+router.get("/showData", checkLogin, (req: BodyRequest, res: Response) => {
+  try {
+    const dir = path.resolve(
+      __dirname,
+      "C:/Projects/learn-js/web-crawler/data/course.json"
+    );
+    const result = fs.readFileSync(dir, "utf8");
+    res.json(JSON.parse(result));
+  } catch (error) {
+    res.send("Data has not been crawlled yet");
   }
 });
 
