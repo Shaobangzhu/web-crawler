@@ -1,13 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
 exports.controller = controller;
 exports.get = get;
+const express_1 = require("express");
+exports.router = (0, express_1.Router)();
 function controller(target) {
     Object.getOwnPropertyNames(target.prototype).forEach((item) => {
-        // 排除默认的constructor属性
+        // skip constructor by default
         if (item !== "constructor") {
-            const data = Reflect.getMetadata("path", target.prototype, item);
-            console.log(data);
+            const path = Reflect.getMetadata("path", target.prototype, item);
+            const handler = target.prototype[item];
+            if (path) {
+                exports.router.get(path, handler);
+            }
         }
     });
 }

@@ -1,6 +1,7 @@
 import express from "express";
-import router from "./router";
+import { router } from "./controller/decorator";
 import cookieSession from "cookie-session";
+import './controller/Login';
 
 const app = express();
 const port = 7001;

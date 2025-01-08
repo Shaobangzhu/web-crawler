@@ -1,9 +1,15 @@
+import { Router } from "express";
+export const router = Router();
+
 export function controller(target: any) {
   Object.getOwnPropertyNames(target.prototype).forEach((item: string) => {
-    // 排除默认的constructor属性
+    // skip constructor by default
     if (item !== "constructor") {
-      const data = Reflect.getMetadata("path", target.prototype, item);
-      console.log(data);
+      const path = Reflect.getMetadata("path", target.prototype, item);
+      const handler = target.prototype[item];
+      if (path) {
+        router.get(path, handler);
+      }
     }
   });
 }
