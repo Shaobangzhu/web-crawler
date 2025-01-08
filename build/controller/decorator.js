@@ -1,15 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.post = exports.get = exports.router = void 0;
+exports.post = exports.get = void 0;
 exports.controller = controller;
 exports.use = use;
-const express_1 = require("express");
-exports.router = (0, express_1.Router)();
-var Method;
-(function (Method) {
-    Method["get"] = "get";
-    Method["post"] = "post";
-})(Method || (Method = {}));
+const router_1 = __importDefault(require("../router"));
+var Methods;
+(function (Methods) {
+    Methods["get"] = "get";
+    Methods["post"] = "post";
+})(Methods || (Methods = {}));
 function controller(target) {
     Object.getOwnPropertyNames(target.prototype).forEach((item) => {
         // skip constructor by default
@@ -20,10 +22,10 @@ function controller(target) {
             const middleware = Reflect.getMetadata("middleware", target.prototype, item);
             if (path && method && handler) {
                 if (middleware) {
-                    exports.router[method](path, middleware, handler);
+                    router_1.default[method](path, middleware, handler);
                 }
                 else {
-                    exports.router[method](path, handler);
+                    router_1.default[method](path, handler);
                 }
             }
         }
@@ -42,5 +44,5 @@ function getRequestDecorator(type) {
         };
     };
 }
-exports.get = getRequestDecorator("get");
-exports.post = getRequestDecorator("post");
+exports.get = getRequestDecorator(Methods.get);
+exports.post = getRequestDecorator(Methods.post);

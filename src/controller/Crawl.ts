@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { Request, Response, NextFunction } from "express";
-import { controller, get, use } from "./Decorator";
+import { controller, use, get } from "../decorator/index";
 import { getResponseData } from "../utils/util";
 import Crawler from "../utils/crawler";
 import FirstAnalyzer from "../utils/firstAnalyzer";

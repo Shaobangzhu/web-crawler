@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const Decorator_1 = require("./controller/Decorator");
+const router_1 = __importDefault(require("./router"));
 const cookie_session_1 = __importDefault(require("cookie-session"));
 require("./controller/Login");
 require("./controller/Crawl");
@@ -16,7 +16,7 @@ app.use((0, cookie_session_1.default)({
     keys: ['clu'],
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
-app.use(Decorator_1.router);
+app.use(router_1.default);
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
 });

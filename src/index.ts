@@ -1,5 +1,5 @@
 import express from "express";
-import { router } from "./controller/Decorator";
+import router from './router' 
 import cookieSession from "cookie-session";
 import './controller/Login';
 import './controller/Crawl';

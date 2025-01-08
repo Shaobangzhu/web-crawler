@@ -73,7 +73,7 @@ Below is a diagram representing the architecture of the web crawler app. It incl
 ## Notes
 The application targets a demo URL: http://www.dell-lee.com/typescript/demo.html. </br>
 Ensure the target URL is accessible during execution. </br>
-Modify the _url or _secret if needed for your use case. </br>
+Modify the url or secret if needed for your use case. </br>
 
 ## Future Improvement
 Save the extracted data to a database. </br>
