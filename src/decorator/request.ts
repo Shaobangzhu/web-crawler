@@ -1,3 +1,5 @@
+import { Crawl, Login } from '../controller';
+
 enum Methods {
   get = "get",
   post = "post",
@@ -5,7 +7,7 @@ enum Methods {
 
 function getRequestDecorator(type: Methods) {
   return (path: string) => {
-    return (target: any, key: string) => {
+    return (target: Crawl | Login, key: string) => {
       Reflect.defineMetadata("path", path, target, key);
       Reflect.defineMetadata("method", type, target, key);
     };

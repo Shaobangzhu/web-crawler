@@ -7,11 +7,16 @@ interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
 }
 
-@controller
-class Login {
+@controller('/')
+export class Login {
+
+  static isLogin(req: BodyRequest): boolean {
+    return !!req.session ? req.session.login : undefined;
+  }
+
   @get("/")
-  home(req: BodyRequest, res: Response) {
-    const isLogin = req.session ? req.session.login : undefined;
+  home(req: BodyRequest, res: Response): void {
+    const isLogin = Login.isLogin(req);
     if (isLogin) {
       res.send(`
       <html>
@@ -37,9 +42,9 @@ class Login {
   }
 
   @post("/login")
-  login(req: BodyRequest, res: Response) {
+  login(req: BodyRequest, res: Response): void {
     const { password } = req.body;
-    const isLogin = req.session ? req.session.login : undefined;
+    const isLogin = Login.isLogin(req);
 
     if (isLogin) {
       res.send("Already logged in");
@@ -54,7 +59,7 @@ class Login {
   }
 
   @get("/logout")
-  logout(req: BodyRequest, res: Response) {
+  logout(req: BodyRequest, res: Response): void {
     if (req.session) {
       req.session.login = undefined;
     }

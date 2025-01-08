@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const Decorator_1 = require("./Decorator");
+const index_1 = require("../decorator/index");
 const util_1 = require("../utils/util");
 const crawler_1 = __importDefault(require("../utils/crawler"));
 const firstAnalyzer_1 = __importDefault(require("../utils/firstAnalyzer"));
@@ -21,7 +21,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 // Middleware to check if the user is logged in or not
 const checkLogin = (req, res, next) => {
-    const isLogin = req.session ? req.session.login : undefined;
+    const isLogin = !!req.session ? req.session.login : undefined;
     if (isLogin) {
         next();
     }
@@ -49,19 +49,19 @@ let Crawl = class Crawl {
     }
 };
 __decorate([
-    (0, Decorator_1.get)("/crawl"),
-    (0, Decorator_1.use)(checkLogin),
+    (0, index_1.get)("/crawl"),
+    (0, index_1.use)(checkLogin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Crawl.prototype, "crawl", null);
 __decorate([
-    (0, Decorator_1.get)("/showData"),
-    (0, Decorator_1.use)(checkLogin),
+    (0, index_1.get)("/showData"),
+    (0, index_1.use)(checkLogin),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Crawl.prototype, "showData", null);
 Crawl = __decorate([
-    Decorator_1.controller
+    index_1.controller
 ], Crawl);

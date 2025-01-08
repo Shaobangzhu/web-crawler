@@ -12,8 +12,8 @@ interface BodyRequest extends Request {
 }
 
 // Middleware to check if the user is logged in or not
-const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
-  const isLogin = req.session ? req.session.login : undefined;
+const checkLogin = (req: BodyRequest, res: Response, next: NextFunction): void => {
+  const isLogin = !!req.session ? req.session.login : undefined;
   if (isLogin) {
     next();
   } else {
@@ -23,11 +23,11 @@ const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
   }
 };
 
-@controller
-class Crawl {
+@controller('/')
+export class Crawl {
   @get("/crawl")
   @use(checkLogin)
-  crawl(req: BodyRequest, res: Response) {
+  crawl(req: BodyRequest, res: Response): void {
     const secret = "x3b174jsx";
     const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;
 
@@ -38,7 +38,7 @@ class Crawl {
 
   @get("/showData")
   @use(checkLogin)
-  showData(req: BodyRequest, res: Response) {
+  showData(req: BodyRequest, res: Response): void {
     try {
       const dir = path.resolve(
         __dirname,

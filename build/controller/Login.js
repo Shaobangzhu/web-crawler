@@ -8,13 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var Login_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const Decorator_1 = require("./Decorator");
+const index_1 = require("../decorator/index");
 const util_1 = require("../utils/util");
-let Login = class Login {
+let Login = Login_1 = class Login {
+    static isLogin(req) {
+        return !!req.session ? req.session.login : undefined;
+    }
     home(req, res) {
-        const isLogin = req.session ? req.session.login : undefined;
+        const isLogin = Login_1.isLogin(req);
         if (isLogin) {
             res.send(`
       <html>
@@ -41,7 +45,7 @@ let Login = class Login {
     }
     login(req, res) {
         const { password } = req.body;
-        const isLogin = req.session ? req.session.login : undefined;
+        const isLogin = Login_1.isLogin(req);
         if (isLogin) {
             res.send("Already logged in");
         }
@@ -63,23 +67,23 @@ let Login = class Login {
     }
 };
 __decorate([
-    (0, Decorator_1.get)("/"),
+    (0, index_1.get)("/"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Login.prototype, "home", null);
 __decorate([
-    (0, Decorator_1.post)("/login"),
+    (0, index_1.post)("/login"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Login.prototype, "login", null);
 __decorate([
-    (0, Decorator_1.get)("/logout"),
+    (0, index_1.get)("/logout"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Login.prototype, "logout", null);
-Login = __decorate([
-    Decorator_1.controller
+Login = Login_1 = __decorate([
+    index_1.controller
 ], Login);
