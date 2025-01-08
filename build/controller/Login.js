@@ -10,22 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-function controller(target) {
-    Object.getOwnPropertyNames(target.prototype).forEach((item) => {
-        // 排除默认的constructor属性
-        if (item !== 'constructor') {
-            const data = Reflect.getMetadata('path', target.prototype, item);
-            console.log(data);
-        }
-    });
-}
-function get(path) {
-    return function (target, key) {
-        Reflect.defineMetadata('path', path, target, key);
-    };
-}
+const decorator_1 = require("./decorator");
 let Login = class Login {
-    test() { }
     home(req, res) {
         const isLogin = req.session ? req.session.login : undefined;
         if (isLogin) {
@@ -54,11 +40,11 @@ let Login = class Login {
     }
 };
 __decorate([
-    get('/'),
+    (0, decorator_1.get)('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Login.prototype, "home", null);
 Login = __decorate([
-    controller
+    decorator_1.controller
 ], Login);

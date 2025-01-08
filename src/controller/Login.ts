@@ -1,24 +1,9 @@
 import 'reflect-metadata';
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import { controller, get } from './decorator';
 
 interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
-}
-
-function controller(target: any) {
-  Object.getOwnPropertyNames(target.prototype).forEach((item: string) => {
-    // 排除默认的constructor属性
-    if (item !== 'constructor') {
-      const data = Reflect.getMetadata('path', target.prototype, item)
-      console.log(data)
-    }
-  })
-}
-
-function get(path: string) {
-    return function(target: any, key: string) {
-      Reflect.defineMetadata('path', path, target, key)
-    }
 }
 
 @controller
