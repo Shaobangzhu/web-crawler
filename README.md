@@ -76,6 +76,6 @@ Ensure the target URL is accessible during execution. </br>
 Modify the _url or _secret if needed for your use case. </br>
 
 ## Future Improvement
-Save the extracted data to a file or database. </br>
+Save the extracted data to a database. </br>
 Add unit tests for critical components. </br>
 Implement React as Front-End. </br>
