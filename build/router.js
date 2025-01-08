@@ -20,32 +20,7 @@ const checkLogin = (req, res, next) => {
     }
 };
 const router = (0, express_1.Router)();
-router.get("/", (req, res) => {
-    const isLogin = req.session ? req.session.login : undefined;
-    if (isLogin) {
-        res.send(`
-      <html>
-        <body>
-          <a href='/crawl'>Get Data</a><br />
-          <a href='/showData'>Show Data</a><br />
-          <a href='/logout'>Log Out</a>
-        </body>
-      </html>
-    `);
-    }
-    else {
-        res.send(`
-      <html>
-        <body>
-          <form method="post" action="/login">
-            <input type="password" name="password" />
-            <button>Log In</button>
-          </form>
-        </body>
-      </html>
-    `);
-    }
-});
+router.get("/", () => { });
 router.post("/login", (req, res) => {
     const { password } = req.body;
     const isLogin = req.session ? req.session.login : undefined;
