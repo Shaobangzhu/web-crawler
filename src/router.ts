@@ -1,4 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
+import { getResponseData } from "./utils/util";
 import Crawler from "./utils/crawler";
 import FirstAnalyzer from "./utils/firstAnalyzer";
 import fs from "fs";
@@ -14,7 +15,7 @@ const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
   if (isLogin) {
     next();
   } else {
-    res.send("Please Log In with Your Credential First!");
+    res.json(getResponseData(null, "Please Log In with Your Credential First!"));
   }
 };
 
@@ -55,9 +56,9 @@ router.post("/login", (req: BodyRequest, res: Response) => {
   } else {
     if (password === "extron" && req.session) {
       req.session.login = true;
-      res.send("Log In Succeed!");
+      res.json(getResponseData(true));
     } else {
-      res.send("Log In Failure!");
+      res.json(getResponseData(false, "Log In Failure!"));
     }
   }
 });
@@ -66,7 +67,7 @@ router.get("/logout", (req: BodyRequest, res: Response) => {
   if (req.session) {
     req.session.login = undefined;
   }
-  res.redirect("/");
+  res.json(getResponseData(true));
 });
 
 router.get("/crawl", checkLogin, (req: BodyRequest, res: Response) => {
@@ -75,7 +76,7 @@ router.get("/crawl", checkLogin, (req: BodyRequest, res: Response) => {
 
   const analyzer = FirstAnalyzer.getInstance();
   new Crawler(url, analyzer);
-  res.send("Crawling Succeed!");
+  res.json(getResponseData(true, "Crawling Succeed!"));
 });
 
 router.get("/showData", checkLogin, (req: BodyRequest, res: Response) => {
@@ -85,9 +86,9 @@ router.get("/showData", checkLogin, (req: BodyRequest, res: Response) => {
       "C:/Projects/learn-js/web-crawler/data/course.json"
     );
     const result = fs.readFileSync(dir, "utf8");
-    res.json(JSON.parse(result));
+    res.json(getResponseData(JSON.parse(result)));
   } catch (error) {
-    res.send("Data has not been crawlled yet");
+    res.json(getResponseData(false, "Data does not exist!"));
   }
 });
 
