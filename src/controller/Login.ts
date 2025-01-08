@@ -1,7 +1,7 @@
-import 'reflect-metadata';
-import { Request, Response } from 'express';
-import { controller, get } from './decorator';
-import { getResponseData } from '../utils/util';
+import "reflect-metadata";
+import { Request, Response } from "express";
+import { controller, get, post } from "./decorator";
+import { getResponseData } from "../utils/util";
 
 interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
@@ -9,8 +9,7 @@ interface BodyRequest extends Request {
 
 @controller
 class Login {
-
-  @get('/')
+  @get("/")
   home(req: BodyRequest, res: Response) {
     const isLogin = req.session ? req.session.login : undefined;
     if (isLogin) {
@@ -37,7 +36,24 @@ class Login {
     }
   }
 
-  @get('/logout')
+  @post("/login")
+  login(req: BodyRequest, res: Response) {
+    const { password } = req.body;
+    const isLogin = req.session ? req.session.login : undefined;
+
+    if (isLogin) {
+      res.send("Already logged in");
+    } else {
+      if (password === "extron" && req.session) {
+        req.session.login = true;
+        res.json(getResponseData(true));
+      } else {
+        res.json(getResponseData(false, "Log In Failure!"));
+      }
+    }
+  }
+
+  @get("/logout")
   logout(req: BodyRequest, res: Response) {
     if (req.session) {
       req.session.login = undefined;

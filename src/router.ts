@@ -21,24 +21,6 @@
 
 // const router = Router();
 
-// router.get("/", () => {});
-
-// router.post("/login", (req: BodyRequest, res: Response) => {
-//   const { password } = req.body;
-//   const isLogin = req.session ? req.session.login : undefined;
-
-//   if (isLogin) {
-//     res.send("Already logged in");
-//   } else {
-//     if (password === "extron" && req.session) {
-//       req.session.login = true;
-//       res.json(getResponseData(true));
-//     } else {
-//       res.json(getResponseData(false, "Log In Failure!"));
-//     }
-//   }
-// });
-
 // router.get("/crawl", checkLogin, (req: BodyRequest, res: Response) => {
 //   const secret = "x3b174jsx";
 //   const url = `http://www.dell-lee.com/typescript/demo.html?secret=${secret}`;

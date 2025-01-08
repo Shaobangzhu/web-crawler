@@ -39,6 +39,22 @@ let Login = class Login {
     `);
         }
     }
+    login(req, res) {
+        const { password } = req.body;
+        const isLogin = req.session ? req.session.login : undefined;
+        if (isLogin) {
+            res.send("Already logged in");
+        }
+        else {
+            if (password === "extron" && req.session) {
+                req.session.login = true;
+                res.json((0, util_1.getResponseData)(true));
+            }
+            else {
+                res.json((0, util_1.getResponseData)(false, "Log In Failure!"));
+            }
+        }
+    }
     logout(req, res) {
         if (req.session) {
             req.session.login = undefined;
@@ -47,13 +63,19 @@ let Login = class Login {
     }
 };
 __decorate([
-    (0, decorator_1.get)('/'),
+    (0, decorator_1.get)("/"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], Login.prototype, "home", null);
 __decorate([
-    (0, decorator_1.get)('/logout'),
+    (0, decorator_1.post)("/login"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", void 0)
+], Login.prototype, "login", null);
+__decorate([
+    (0, decorator_1.get)("/logout"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
