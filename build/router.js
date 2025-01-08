@@ -1,22 +1,11 @@
 "use strict";
 // import { Router, Request, Response, NextFunction } from "express";
 // import { getResponseData } from "./utils/util";
-// import Crawler from "./utils/crawler";
-// import FirstAnalyzer from "./utils/firstAnalyzer";
 // import fs from "fs";
 // import path from "path";
 // interface BodyRequest extends Request {
 //   body: { [key: string]: string | undefined };
 // }
-// // Middleware to check if the user is logged in or not
-// const checkLogin = (req: BodyRequest, res: Response, next: NextFunction) => {
-//   const isLogin = req.session ? req.session.login : undefined;
-//   if (isLogin) {
-//     next();
-//   } else {
-//     res.json(getResponseData(null, "Please Log In with Your Credential First!"));
-//   }
-// };
 // const router = Router();
 // router.get("/crawl", checkLogin, (req: BodyRequest, res: Response) => {
 //   const secret = "x3b174jsx";
