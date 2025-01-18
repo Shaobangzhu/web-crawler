@@ -42,7 +42,7 @@ export class Crawl {
     try {
       const dir = path.resolve(
         __dirname,
-        "C:/Projects/learn-js/web-crawler/data/course.json"
+        "C:/Projects/learn-js/web-crawler/backend-project/data/course.json"
       );
       const result = fs.readFileSync(dir, "utf8");
       res.json(getResponseData(JSON.parse(result)));

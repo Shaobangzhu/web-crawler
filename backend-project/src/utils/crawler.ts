@@ -11,7 +11,7 @@ export interface Analyzer {
 }
 
 class Crawler {
-  private _filePath = path.resolve(__dirname, 'C:/Projects/learn-js/web-crawler/data/course.json');
+  private _filePath = path.resolve(__dirname, 'C:/Projects/learn-js/web-crawler/backend-project/data/course.json');
 
   /**
    * Fetches the raw HTML content from a given URL
