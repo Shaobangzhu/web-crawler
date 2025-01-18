@@ -78,4 +78,3 @@ Modify the url or secret if needed for your use case. </br>
 ## Future Improvement
 Save the extracted data to a database. </br>
 Add unit tests for critical components. </br>
-Implement React as Front-End. </br>
