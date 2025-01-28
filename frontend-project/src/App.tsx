@@ -1,44 +1,17 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
-import { LockOutlined } from "@ant-design/icons";
-import "./login.css";
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import LoginForm from "./Views/Login/index.tsx";
 
-function App() {
-  const [form] = Form.useForm();
-
-  const handleSubmit = (values: any) => {
-    console.log("Received values of form: ", values);
-  };
-
+const App: React.FC = () => {
   return (
-    <div className="login-page">
-      <Form 
-        form={form} 
-        onFinish={handleSubmit} 
-        className="login-form"
-        initialValues={{ remember: true }} 
-      >
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Please Enter LogIn Password" }]}
-        >
-          <Input.Password
-            prefix={<LockOutlined style={{ color: "rgba(0, 0, 0, .25)" }} />}
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            LogIn
-          </Button>
-        </Form.Item>
-      </Form>
+    <div>
+      <HashRouter>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+        </Routes>
+      </HashRouter>
     </div>
   );
-}
+};
 
 export default App;
