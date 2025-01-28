@@ -14,6 +14,12 @@ export class Login {
     return !!req.session ? req.session.login : undefined;
   }
 
+  @get('/api/isLogin')
+  isLogin(req: BodyRequest, res: Response): void {
+    const isLogin = Login.isLogin(req);
+    res.json(getResponseData(isLogin));
+  }
+
   @get("/")
   home(req: BodyRequest, res: Response): void {
     const isLogin = Login.isLogin(req);

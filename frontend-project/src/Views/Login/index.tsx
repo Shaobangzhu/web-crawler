@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button } from "antd";
 import { LockOutlined } from "@ant-design/icons";
-import "./login.css";
+import "./style.css";
 
 const LoginForm: React.FC = () => {
     
