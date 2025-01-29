@@ -46,11 +46,11 @@ const Home: React.FC = () => {
   return loaded ? (
     <div className="home-page">
       <Button type="primary" style={{ marginLeft: '5px' }}>
-        爬取
+        Crawl
       </Button>
-      <Button type="primary">展示</Button>
+      <Button type="primary">Show Data</Button>
       <Button type="primary" onClick={handleLogoutClick}>
-        退出
+        Log Out
       </Button>
     </div>
   ) : null;

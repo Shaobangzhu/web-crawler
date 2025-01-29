@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">
-            登陆
+            Log In
           </Button>
         </Form.Item>
       </Form>
