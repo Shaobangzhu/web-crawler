@@ -1,37 +1,59 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { Button, message } from 'antd';
 import axios from 'axios';
 import './style.css';
 
 const Home: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loaded, setLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/api/isLogin').then(res => {
-      if (!res.data?.data) {
-        setIsLogin(false);
+    const checkLoginStatus = async () => {
+      try {
+        const res = await axios.get('/api/isLogin');
+        if (!res.data?.data) {
+          setIsLogin(false);
+        }
+      } catch (error) {
+        message.error('Error checking login status');
+      } finally {
+        setLoaded(true);
       }
-      setLoaded(true);
-    });
+    };
+    checkLoginStatus();
   }, []);
 
+  const handleLogoutClick = async () => {
+    try {
+      const res = await axios.get('/api/logout');
+      if (res.data?.data) {
+        setIsLogin(false);
+        navigate('/login'); // Redirect after logout
+      } else {
+        message.error('退出失败');
+      }
+    } catch (error) {
+      message.error('Logout request failed');
+    }
+  };
+
   if (!isLogin) {
-    return <Navigate to="/login" />;
+    navigate('/login');
   }
 
-  if (!loaded) {
-    return null; // Render nothing until the data is loaded
-  }
-
-  return (
+  return loaded ? (
     <div className="home-page">
-      <Button type="primary">Get Data</Button>
-      <Button type="primary">Show Data</Button>
-      <Button type="primary">Log Out</Button>
+      <Button type="primary" style={{ marginLeft: '5px' }}>
+        爬取
+      </Button>
+      <Button type="primary">展示</Button>
+      <Button type="primary" onClick={handleLogoutClick}>
+        退出
+      </Button>
     </div>
-  );
+  ) : null;
 };
 
 export default Home;

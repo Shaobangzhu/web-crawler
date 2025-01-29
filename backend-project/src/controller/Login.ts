@@ -7,44 +7,17 @@ interface BodyRequest extends Request {
   body: { [key: string]: string | undefined };
 }
 
-@controller('/')
+@controller('/api')
 export class Login {
 
   static isLogin(req: BodyRequest): boolean {
     return !!req.session ? req.session.login : undefined;
   }
 
-  @get('/api/isLogin')
+  @get('/isLogin')
   isLogin(req: BodyRequest, res: Response): void {
     const isLogin = Login.isLogin(req);
     res.json(getResponseData(isLogin));
-  }
-
-  @get("/")
-  home(req: BodyRequest, res: Response): void {
-    const isLogin = Login.isLogin(req);
-    if (isLogin) {
-      res.send(`
-      <html>
-        <body>
-          <a href='/crawl'>Get Data</a><br />
-          <a href='/showData'>Show Data</a><br />
-          <a href='/logout'>Log Out</a>
-        </body>
-      </html>
-    `);
-    } else {
-      res.send(`
-      <html>
-        <body>
-          <form method="post" action="/login">
-            <input type="password" name="password" />
-            <button>Log In</button>
-          </form>
-        </body>
-      </html>
-    `);
-    }
   }
 
   @post("/login")
@@ -53,7 +26,7 @@ export class Login {
     const isLogin = Login.isLogin(req);
 
     if (isLogin) {
-      res.send("Already logged in");
+      res.json(getResponseData(true));
     } else {
       if (password === "extron" && req.session) {
         req.session.login = true;
