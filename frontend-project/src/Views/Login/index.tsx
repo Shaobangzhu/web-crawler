@@ -41,7 +41,7 @@ const LoginForm: React.FC = () => {
       <Form form={form} onFinish={handleSubmit} className="login-form">
         <Form.Item
           name="password"
-          rules={[{ required: true, message: '请输入登陆密码' }]}
+          rules={[{ required: true, message: 'Please Enter Log In Password!' }]}
         >
           <Input
             prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}

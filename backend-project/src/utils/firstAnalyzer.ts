@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import fs from 'fs';
+import fs from "fs";
 import { Analyzer } from "./crawler";
 
 interface Content {
@@ -16,12 +16,11 @@ interface ResultObj {
   data: Course[];
 }
 
-export default class FirstAnalyzer implements Analyzer{
-
+export default class FirstAnalyzer implements Analyzer {
   private static instance: FirstAnalyzer;
 
   static getInstance() {
-    if(!FirstAnalyzer.instance) {
+    if (!FirstAnalyzer.instance) {
       FirstAnalyzer.instance = new FirstAnalyzer();
     }
     return FirstAnalyzer.instance;
@@ -52,11 +51,20 @@ export default class FirstAnalyzer implements Analyzer{
   }
 
   private generateCourseContent(courseInfo: ResultObj, filePath: string) {
-    let fileContent: Content = {};
+    let fileContent: Record<string, any> = {}; // 明确 fileContent 类型
+
     if (fs.existsSync(filePath)) {
-      fileContent = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+      try {
+        const fileData = fs.readFileSync(filePath, "utf-8");
+        fileContent = fileData.trim() ? JSON.parse(fileData) : {}; // 避免解析空字符串
+      } catch (error) {
+        console.error(`Error parsing JSON from ${filePath}:`, error);
+        return {}; // 遇到异常时返回空对象，避免程序崩溃
+      }
     }
+
     fileContent[courseInfo.time] = courseInfo.data;
+
     return fileContent;
   }
 

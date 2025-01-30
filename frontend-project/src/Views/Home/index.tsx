@@ -32,12 +32,25 @@ const Home: React.FC = () => {
         setIsLogin(false);
         navigate('/login'); // Redirect after logout
       } else {
-        message.error('退出失败');
+        message.error('Log Out Failure!');
       }
     } catch (error) {
       message.error('Logout request failed');
     }
   };
+
+  const handleCrawlerClick = async () => {
+    try {
+      const res = await axios.get('/api/crawl');
+      if (res.data?.data) {
+          message.success('crawling succeed!');
+      } else {
+        message.error('crawling failure!')
+      }
+    } catch (error) {
+      message.error('crawling failure!');
+    }
+  }
 
   if (!isLogin) {
     navigate('/login');
@@ -45,7 +58,11 @@ const Home: React.FC = () => {
 
   return loaded ? (
     <div className="home-page">
-      <Button type="primary" style={{ marginLeft: '5px' }}>
+      <Button 
+        type="primary" 
+        style={{ marginLeft: '5px' }}
+        onClick={handleCrawlerClick}
+      >
         Crawl
       </Button>
       <Button type="primary">Show Data</Button>

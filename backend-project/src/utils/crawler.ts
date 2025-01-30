@@ -1,7 +1,6 @@
 import superagent from 'superagent';
 import fs from 'fs';
 import path from 'path';
-import FirstAnalyzer from './firstAnalyzer';
 
 /**
  * Parses the fetched HTML content and extracts meaningful data
