@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@types/echarts": "^4.9.22"
+  }
+}
