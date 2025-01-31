@@ -1,31 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, message } from "antd";
 import ReactEcharts from "echarts-for-react";
 import axios from "axios";
+import moment from "moment";
 import "./style.css";
 
+interface CourseItem {
+  title: string;
+  count: number;
+}
+
+interface LineData {
+  name: string;
+  type: string;
+  data: number[];
+}
+
 const Home: React.FC = () => {
-  const [isLogin, setIsLogin] = useState<null | boolean>(null);
   const [loaded, setLoaded] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+  const [data, setData] = useState<{ [key: string]: CourseItem[] }>({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get("/api/isLogin");
-        setIsLogin(res.data?.data || false);
-      } catch (error) {
-        message.error("Error checking login status");
-      } finally {
+        const loginRes = await axios.get("/api/isLogin");
+        if (!loginRes.data?.data) {
+          setIsLogin(false);
+        }
         setLoaded(true);
+
+        const dataRes = await axios.get("/api/showData");
+        if (dataRes.data?.data) {
+          setData(dataRes.data.data);
+        }
+      } catch (error) {
+        message.error("Error fetching data");
       }
     };
-    checkLoginStatus();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    if (isLogin === false) {
+    if (!isLogin) {
       navigate("/login");
     }
   }, [isLogin, navigate]);
@@ -33,10 +52,10 @@ const Home: React.FC = () => {
   const handleLogoutClick = async () => {
     try {
       const res = await axios.get("/api/logout");
-      if (res.data?.success) {
+      if (res.data?.data) {
         setIsLogin(false);
       } else {
-        message.error("Log Out Failure!");
+        message.error("Log Out Failed!");
       }
     } catch (error) {
       message.error("Logout request failed");
@@ -45,8 +64,8 @@ const Home: React.FC = () => {
 
   const handleCrawlerClick = async () => {
     try {
-      const res = await axios.get("/api/crawl");
-      if (res.data?.success) {
+      const res = await axios.get("/api/getData");
+      if (res.data?.data) {
         message.success("Crawling succeeded!");
       } else {
         message.error("Crawling failed!");
@@ -56,48 +75,43 @@ const Home: React.FC = () => {
     }
   };
 
-  const getOption: () => echarts.EChartOption = () => ({
-    title: { text: "Stacked Line" },
-    tooltip: { trigger: "axis" },
-    legend: {
-      data: ["Email", "Union Ads", "Video Ads", "Direct", "Search Engine"],
-    },
-    grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
-    toolbox: { feature: { saveAsImage: {} } },
-    xAxis: {
-      type: "category",
-      boundaryGap: false,
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    yAxis: { type: "value" },
-    series: [
-      { name: "Email", type: "line", data: [120, 132, 101, 134, 90, 230, 210] },
-      {
-        name: "Union Ads",
-        type: "line",
-        data: [220, 182, 191, 234, 290, 330, 310],
-      },
-      {
-        name: "Video Ads",
-        type: "line",
-        data: [150, 232, 201, 154, 190, 330, 410],
-      },
-      {
-        name: "Direct",
-        type: "line",
-        data: [320, 332, 301, 334, 390, 330, 320],
-      },
-      {
-        name: "Search Engine",
-        type: "line",
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-      },
-    ],
-  });
+  const getOption = useCallback(() => {
+    const courseNames: string[] = [];
+    const times: string[] = [];
+    const tempData: { [key: string]: number[] } = {};
 
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
+    Object.entries(data).forEach(([timestamp, items]) => {
+      times.push(moment(Number(timestamp)).format("MM-DD HH:mm"));
+      items.forEach(({ title, count }) => {
+        if (!courseNames.includes(title)) {
+          courseNames.push(title);
+        }
+        tempData[title]
+          ? tempData[title].push(count)
+          : (tempData[title] = [count]);
+      });
+    });
+
+    const result: LineData[] = Object.entries(tempData).map(
+      ([name, values]) => ({
+        name,
+        type: "line",
+        data: values,
+      })
+    );
+
+    return {
+      title: { text: "课程在线学习人数" },
+      tooltip: { trigger: "axis" },
+      legend: { data: courseNames },
+      grid: { left: "3%", right: "4%", bottom: "3%", containLabel: true },
+      xAxis: { type: "category", boundaryGap: false, data: times },
+      yAxis: { type: "value" },
+      series: result,
+    };
+  }, [data]);
+
+  if (!loaded) return null;
 
   return (
     <div className="home-page">
@@ -113,7 +127,6 @@ const Home: React.FC = () => {
           Log Out
         </Button>
       </div>
-
       <ReactEcharts option={getOption()} />
     </div>
   );
